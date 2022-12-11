@@ -11,10 +11,10 @@ export default function Curso({ curso }) {
               rgb(0, 0, 0, 0.65),
               rgb(0, 0, 0, 0.7)
             ),
-            url("${urlImagen}");
+            url(${urlImagen});
         }
       `}</style>
-      {console.log(urlImagen)}
+
       <div className="contenedor curso-grid">
         <div className="contenido">
           <h2 className="heading">{titulo}</h2>

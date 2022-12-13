@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import { Formulario } from "./Formulario";
+import CotizadorContext from "../context/CotizadorProvider";
 
 export const AppSeguro = () => {
+  const { modal } = useContext(CotizadorContext);
+
   return (
     <>
       <header className="my-10">

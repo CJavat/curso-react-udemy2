@@ -1,9 +1,10 @@
-import { useContext } from "react";
 import { Formulario } from "./Formulario";
-import CotizadorContext from "../context/CotizadorProvider";
+import Spinner from "./Spinner";
+import Resultado from "./Resultado";
+import useCotizador from "../hooks/useCotizador";
 
 export const AppSeguro = () => {
-  const { modal } = useContext(CotizadorContext);
+  const { resultado, cargando } = useCotizador();
 
   return (
     <>
@@ -15,6 +16,7 @@ export const AppSeguro = () => {
 
       <main className="bg-white md:w-2/3 lg:w-2/4 mx-auto shadow rounded-lg p-10">
         <Formulario />
+        {cargando ? <Spinner /> : <Resultado />}
       </main>
     </>
   );

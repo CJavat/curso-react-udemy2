@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const QuioscoContext = createContext();
 
@@ -10,7 +11,10 @@ const QuioscoProvider = ({ children }) => {
   const [producto, setProducto] = useState({});
   const [modal, setModal] = useState(false);
   const [pedido, setPedido] = useState([]);
-  const [paso, setPaso] = useState(1);
+  const [nombre, setNombre] = useState("");
+  const [total, setTotal] = useState(0);
+
+  const router = useRouter();
 
   const obtenerCategorias = async () => {
     const { data } = await axios("/api/categorias");
@@ -25,9 +29,18 @@ const QuioscoProvider = ({ children }) => {
     setCategoriaActual(categorias[0]);
   }, [categorias]);
 
+  useEffect(() => {
+    const nuevoTotal = pedido.reduce(
+      (total, producto) => producto.precio * producto.cantidad + total,
+      0
+    );
+    setTotal(nuevoTotal);
+  }, [pedido]);
+
   const handleClickCategoria = (id) => {
     const categoria = categorias.filter((cat) => cat.id === id);
     setCategoriaActual(categoria[0]);
+    router.push("/");
   };
 
   const handleSetProducto = (producto) => {
@@ -38,16 +51,17 @@ const QuioscoProvider = ({ children }) => {
     setModal(!modal);
   };
 
-  const handleAgregarPedido = ({ categoriaId, imagen, ...producto }) => {
-    const productoState = pedido.some(
+  const handleAgregarPedido = ({ categoriaId, ...producto }) => {
+    const productoEstado = pedido.some(
       (productoState) => productoState.id === producto.id
     );
 
-    if (productoState) {
+    if (productoEstado) {
       // Actualizar la cantidad.
       const pedidoActualizado = pedido.map((pedidoState) =>
-        pedidoState.id === producto.id ? producto : productoState
+        pedidoState.id === producto.id ? producto : pedidoState
       );
+
       setPedido(pedidoActualizado);
 
       toast.success("Guardado correctamente"); // Notificacion
@@ -56,11 +70,23 @@ const QuioscoProvider = ({ children }) => {
       toast.success("Agregado al pedido"); // Notificacion
     }
 
-    setModal(false);
+    setModal(!modal);
   };
 
-  const handleChangePaso = (paso) => {
-    setPaso(paso);
+  const handleEditarCantidades = (id) => {
+    const productoActualizar = pedido.filter((producto) => producto.id === id);
+    setProducto(productoActualizar[0]);
+    setModal(!modal);
+  };
+
+  const handleEliminarProducto = (id) => {
+    const pedidoActualizado = pedido.filter((producto) => producto.id !== id);
+    setPedido(pedidoActualizado);
+  };
+
+  const colocarOrden = async (e) => {
+    e.preventDefault();
+    console.log("Enviando orden...");
   };
 
   return (
@@ -71,12 +97,16 @@ const QuioscoProvider = ({ children }) => {
         producto,
         modal,
         pedido,
-        paso,
+        nombre,
+        total,
+        setNombre,
         handleClickCategoria,
         handleSetProducto,
         handleChangeModal,
         handleAgregarPedido,
-        handleChangePaso,
+        handleEditarCantidades,
+        handleEliminarProducto,
+        colocarOrden,
       }}
     >
       {children}

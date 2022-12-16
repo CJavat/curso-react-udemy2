@@ -18,7 +18,7 @@ export default function Producto({ producto }) {
       <div className="p-5">
         <h3 className="text-2xl font-bold">{nombre}</h3>
         <p className="mt-5 font-black text-4xl text-amber-500">
-          {formatearDinero(precio)}
+          ${formatearDinero(precio)}
         </p>
 
         <button

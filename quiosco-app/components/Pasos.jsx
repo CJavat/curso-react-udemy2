@@ -13,6 +13,7 @@ export default function Pasos() {
 
   const calcularProgreso = () => {
     let valor = 0;
+
     if (paso === 1) valor = 2;
     else if (paso === 2) valor = 50;
     else valor = 100;

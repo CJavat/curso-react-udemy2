@@ -46,6 +46,56 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const submitProyecto = async (proyecto) => {
+    if (proyecto.id) {
+      await editarProyecto(proyecto);
+    } else {
+      await nuevoProyecto(proyecto);
+    }
+  };
+
+  const editarProyecto = async (proyecto) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.put(
+        `/proyectos/${proyecto.id}`,
+        proyecto,
+        config
+      );
+
+      // Sincronizar el State.
+      const proyectosActualizados = proyectos.map((proyectoState) =>
+        proyectoState._id === data.proyectoAlmacenado._id
+          ? data.proyectoAlmacenado
+          : proyectoState
+      );
+      setProyectos(proyectosActualizados);
+
+      // Mostrar alerta.
+      setAlerta({ msg: "Proyecto Actualizado Correctamente", error: false });
+
+      // Redireccionar.
+      setTimeout(() => {
+        setAlerta({});
+        navigate("/proyectos");
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const nuevoProyecto = async (proyecto) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -61,7 +111,8 @@ const ProyectosProvider = ({ children }) => {
       };
 
       const { data } = await clienteAxios.post("/proyectos", proyecto, config);
-      setProyectos([...proyectos, data]);
+
+      setProyectos([...proyectos, data.proyectoAlmacenado]);
 
       setAlerta({ msg: "Proyecto Creado Correctamente", error: false });
 

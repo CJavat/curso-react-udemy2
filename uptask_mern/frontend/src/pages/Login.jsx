@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
 
+  const navigate = useNavigate();
   const { setAuth } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -28,6 +29,8 @@ export default function Login() {
       setAlerta({});
       localStorage.setItem("token", data.token);
       setAuth(data);
+      navigate("/proyectos");
+      console.log("hola");
     } catch (error) {
       setAlerta({ msg: error.response.data.msg, error: true });
     }

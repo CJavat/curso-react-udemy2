@@ -1,9 +1,54 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import useProyectos from "../hooks/useProyectos";
+import Alerta from "./Alerta";
+import { useParams } from "react-router-dom";
+
+const PRIORIDAD = ["Baja", "Media", "Alta"];
 
 const ModalFormularioTarea = () => {
-  const { modalFormularioTarea, handleModalTarea } = useProyectos();
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [fechaEntrega, setFechaEntrega] = useState("");
+  const [prioridad, setPrioridad] = useState("");
+
+  const params = useParams();
+
+  const {
+    alerta,
+    modalFormularioTarea,
+    handleModalTarea,
+    mostrarAlerta,
+    submitTarea,
+  } = useProyectos();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if ([nombre, descripcion, fechaEntrega, prioridad].includes("")) {
+      mostrarAlerta({
+        msg: "Todos los campos son obligatorios.",
+        error: true,
+      });
+      return;
+    }
+
+    submitTarea({
+      nombre,
+      descripcion,
+      fechaEntrega,
+      prioridad,
+      proyecto: params.id,
+    });
+
+    // Vaciar State.
+    setNombre("");
+    setDescripcion("");
+    setFechaEntrega("");
+    setPrioridad("");
+  };
+
+  const { msg } = alerta;
 
   return (
     <Transition.Root show={modalFormularioTarea} as={Fragment}>
@@ -71,10 +116,86 @@ const ModalFormularioTarea = () => {
                     as="h3"
                     className="text-lg leading-6 font-bold text-gray-900"
                   >
-                    <h1 className="text-4xl">Titulo</h1>
+                    Crear Tarea
                   </Dialog.Title>
+                  {msg && <Alerta alerta={alerta} />}
 
-                  <p>Contenido</p>
+                  <form className="my-10" onSubmit={handleSubmit}>
+                    <div className="mb-5">
+                      <label
+                        htmlFor="nombre"
+                        className="text-gray-700 uppercase font-bold text-sm"
+                      >
+                        Nombre Tarea
+                      </label>
+                      <input
+                        type="text"
+                        id="nombre"
+                        placeholder="Nombre de la tarea"
+                        className="border-2 w-full p-2 mt-2 rounded-md placeholder-gray-400"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        htmlFor="descripcion"
+                        className="text-gray-700 uppercase font-bold text-sm"
+                      >
+                        Descripción Tarea
+                      </label>
+                      <textarea
+                        id="descripcion"
+                        placeholder="Descripción de la tarea"
+                        className="border-2 w-full p-2 mt-2 rounded-md placeholder-gray-400"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        htmlFor="fecha-entrega"
+                        className="text-gray-700 uppercase font-bold text-sm"
+                      >
+                        Fecha Entrega
+                      </label>
+                      <input
+                        type="date"
+                        id="fecha-entrega"
+                        className="border-2 w-full p-2 mt-2 rounded-md placeholder-gray-400"
+                        value={fechaEntrega}
+                        onChange={(e) => setFechaEntrega(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="mb-5">
+                      <label
+                        htmlFor="prioridad"
+                        className="text-gray-700 uppercase font-bold text-sm"
+                      >
+                        Prioridad
+                      </label>
+                      <select
+                        id="prioridad"
+                        className="border-2 w-full p-2 mt-2 rounded-md placeholder-gray-400"
+                        value={prioridad}
+                        onChange={(e) => setPrioridad(e.target.value)}
+                      >
+                        <option value="">-- Seleccionar --</option>
+                        {PRIORIDAD.map((opcion) => (
+                          <option key={opcion}>{opcion}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <input
+                      type="submit"
+                      value="Crear Tarea"
+                      className="bg-sky-600 hover:bg-sky-700 w-full uppercase text-white p-3 font-bold cursor-pointer transition-colors rounded text-sm "
+                    />
+                  </form>
                 </div>
               </div>
             </div>

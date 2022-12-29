@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
 import Tarea from "../components/Tarea";
@@ -6,7 +6,6 @@ import useProyectos from "../hooks/useProyectos";
 
 export default function Proyecto() {
   const params = useParams();
-  const [modal, setModal] = useState(false);
 
   const { proyecto, cargando, obtenerProyecto, handleModalTarea } =
     useProyectos();

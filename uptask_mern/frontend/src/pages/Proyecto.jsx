@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import ModalEliminarTarea from "../components/ModalEliminarTarea";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
 import Tarea from "../components/Tarea";
 import useProyectos from "../hooks/useProyectos";
@@ -84,6 +85,8 @@ export default function Proyecto() {
       </div>
 
       <ModalFormularioTarea />
+
+      <ModalEliminarTarea />
     </>
   );
 }

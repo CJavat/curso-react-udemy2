@@ -296,12 +296,12 @@ const ProyectosProvider = ({ children }) => {
         tarea,
         config
       );
+      setAlerta({});
 
       // Agrega la tarea al State.
       const proyectoActualizado = { ...proyecto };
 
       setProyecto(proyectoActualizado);
-      setAlerta({});
       setModalEliminarTarea(false);
       setTarea({});
     } catch (error) {

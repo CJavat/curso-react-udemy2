@@ -4,17 +4,20 @@ import ModalEliminarTarea from "../components/ModalEliminarTarea";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
 import Tarea from "../components/Tarea";
 import useProyectos from "../hooks/useProyectos";
+import Alerta from "../components/Alerta";
 
 export default function Proyecto() {
   const params = useParams();
 
-  const { proyecto, cargando, obtenerProyecto, handleModalTarea } =
+  const { proyecto, cargando, alerta, obtenerProyecto, handleModalTarea } =
     useProyectos();
   const { nombre } = proyecto;
 
   useEffect(() => {
     obtenerProyecto(params.id);
   }, []);
+
+  const { msg } = alerta;
 
   return cargando ? (
     "Cargando..."
@@ -71,6 +74,12 @@ export default function Proyecto() {
       </button>
 
       <p className="font-bold text-xl mt-10">Tareas del Proyecto</p>
+
+      <div className="flex justify-center">
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          {msg && <Alerta alerta={alerta} />}
+        </div>
+      </div>
 
       <div className="bg-white shadow mt-10 rounded-lg">
         {proyecto.tareas?.length ? (

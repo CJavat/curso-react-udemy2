@@ -291,19 +291,25 @@ const ProyectosProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios.put(
-        `/tareas/${tarea.id}`,
-        tarea,
+      const { data } = await clienteAxios.delete(
+        `/tareas/${tarea._id}`,
         config
       );
-      setAlerta({});
+      setAlerta({ msg: data.msg, error: false });
 
       // Agrega la tarea al State.
       const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.filter(
+        (tareaState) => tareaState._id !== tarea._id
+      );
 
       setProyecto(proyectoActualizado);
       setModalEliminarTarea(false);
       setTarea({});
+
+      setTimeout(() => {
+        setAlerta({});
+      }, 3000);
     } catch (error) {
       console.log(error);
     }

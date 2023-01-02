@@ -13,6 +13,8 @@ const ProyectosProvider = ({ children }) => {
   const [tarea, setTarea] = useState({});
   const [modalEliminarTarea, setModalEliminarTarea] = useState(false);
   const [colaborador, setColaborador] = useState({});
+  const [modalEliminarColaborador, setModalEliminarColaborador] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -379,6 +381,47 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const handleModalEliminarcolaborador = (colaborador) => {
+    setModalEliminarColaborador(!modalEliminarColaborador);
+
+    setColaborador(colaborador);
+  };
+
+  const eliminarColaborador = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `proyectos/eliminar-colaborador/${proyecto._id}`,
+        { id: colaborador._id },
+        config
+      );
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.colaboradores =
+        proyectoActualizado.colaboradores.filter(
+          (colaboradorState) => colaboradorState._id !== colaborador._id
+        );
+
+      setProyecto(proyectoActualizado);
+      setAlerta({ msg: data.msg, error: false });
+
+      setColaborador({});
+      setModalEliminarColaborador(false);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
+  };
+
   return (
     <ProyectosContext.Provider
       value={{
@@ -390,17 +433,20 @@ const ProyectosProvider = ({ children }) => {
         colaborador,
         modalFormularioTarea,
         modalEliminarTarea,
+        modalEliminarColaborador,
         mostrarAlerta,
         submitProyecto,
         obtenerProyecto,
         eliminarProyecto,
         submitTarea,
         eliminarTarea,
+        eliminarColaborador,
+        submitColaborador,
+        agregarColaborador,
         handleModalTarea,
         handleModalEditarTareas,
         handleModalEliminarTarea,
-        submitColaborador,
-        agregarColaborador,
+        handleModalEliminarcolaborador,
       }}
     >
       {children}

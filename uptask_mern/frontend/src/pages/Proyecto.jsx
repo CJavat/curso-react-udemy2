@@ -93,8 +93,18 @@ export default function Proyecto() {
         )}
       </div>
 
-      <ModalFormularioTarea />
+      <div className="flex items-center justify-between mt-10">
+        <p className="font-bold text-xl">Colaboradores</p>
 
+        <Link
+          to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+          className="text-gray-400 hover:text-black uppercase font-bold"
+        >
+          Añadir
+        </Link>
+      </div>
+
+      <ModalFormularioTarea />
       <ModalEliminarTarea />
     </>
   );

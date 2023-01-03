@@ -36,17 +36,19 @@ export default function NuevoColaborador() {
       ) : (
         colaborador?.usuario?._id && (
           <div className="flex justify-center mt-10">
-            <div className="bg-white py-10 px-5 md:w-1/2 rounded-lg shadow">
+            <div className="bg-white py-10 px-5 w-full md:w-1/2 rounded-lg shadow">
               <h2 className="text-center mb-10 text-2xl font-bold">
                 Resultado:
               </h2>
 
               <div className="flex justify-between items-center">
-                <p>{colaborador.usuario.nombre}</p>
-                {console.log(colaborador?.usuario.email)}
+                <p className="font-bold text-xl">
+                  {colaborador.usuario.nombre}
+                </p>
+
                 <button
                   type="button"
-                  className="bg-slate-500 py-2 rounded-lg uppercase text-white font-bold text-sm"
+                  className="bg-slate-500 px-5 py-2 rounded-lg uppercase text-white font-bold text-sm"
                   onClick={() =>
                     agregarColaborador({ email: colaborador?.usuario.email })
                   }

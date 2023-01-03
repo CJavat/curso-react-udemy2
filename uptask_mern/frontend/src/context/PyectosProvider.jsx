@@ -149,8 +149,13 @@ const ProyectosProvider = ({ children }) => {
 
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data);
+      setAlerta({});
     } catch (error) {
+      navigate("/proyectos");
       setAlerta({ msg: error.response.data.msg, error: true });
+      setTimeout(() => {
+        setAlerta({});
+      }, 3000);
     }
     setCargando(false);
   };
@@ -417,6 +422,44 @@ const ProyectosProvider = ({ children }) => {
 
       setColaborador({});
       setModalEliminarColaborador(false);
+
+      setTimeout(() => {
+        setAlerta({});
+      }, 1000);
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
+  };
+
+  const completarTarea = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post(
+        `/tareas/estado/${id}`,
+        {},
+        config
+      );
+
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.map(
+        (tareaState) => (tareaState._id === data._id ? data : tareaState)
+      );
+
+      setProyecto(proyectoActualizado);
+
+      setTarea({});
+      setAlerta({});
     } catch (error) {
       setAlerta({ msg: error.response.data.msg, error: true });
     }
@@ -443,6 +486,7 @@ const ProyectosProvider = ({ children }) => {
         eliminarColaborador,
         submitColaborador,
         agregarColaborador,
+        completarTarea,
         handleModalTarea,
         handleModalEditarTareas,
         handleModalEliminarTarea,

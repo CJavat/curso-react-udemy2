@@ -4,7 +4,7 @@ import {
   obtenerTarea,
   actualizarTarea,
   eliminarTarea,
-  cambiarTarea,
+  cambiarEstado,
 } from "../controllers/tarea.controller.js";
 import checkAuth from "../middleware/checkAuth.js";
 
@@ -16,6 +16,6 @@ router
   .get(checkAuth, obtenerTarea)
   .put(checkAuth, actualizarTarea)
   .delete(checkAuth, eliminarTarea);
-router.post("/estado/:id", checkAuth, cambiarTarea);
+router.post("/estado/:id", checkAuth, cambiarEstado);
 
 export default router;

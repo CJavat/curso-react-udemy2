@@ -1,6 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { editarProductoAction } from "../actions/productoActions.js";
+import { useNavigate } from "react-router-dom";
 
 export const EditarProducto = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Nuevo state de producto
+  const [producto, setProducto] = useState({
+    nombre: "",
+    precio: "",
+  });
+
+  // Producto a editar.
+  const productoEditar = useSelector((state) => state.productos.productoeditar);
+
+  // Llenar el state automaticamente.
+  useEffect(() => {
+    setProducto(productoEditar);
+  }, [productoEditar]);
+
+  // Leer los datos del formulario.
+  const onChangeFormulario = (e) => {
+    setProducto({
+      ...producto,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const { nombre, precio } = producto;
+
+  const submitEditarProducto = (e) => {
+    e.preventDefault();
+
+    dispatch(editarProductoAction(producto));
+    navigate("/");
+  };
+
   return (
     <div className="row justify-content-center">
       <div className="col-md-8">
@@ -10,7 +47,7 @@ export const EditarProducto = () => {
               Editar Producto
             </h2>
 
-            <form>
+            <form onSubmit={submitEditarProducto}>
               <div className="form-group">
                 <label htmlFor="">Nombre Producto</label>
                 <input
@@ -18,6 +55,8 @@ export const EditarProducto = () => {
                   className="form-control"
                   placeholder="Nombre del Producto"
                   name="nombre"
+                  value={nombre}
+                  onChange={onChangeFormulario}
                 />
               </div>
 
@@ -28,6 +67,8 @@ export const EditarProducto = () => {
                   className="form-control"
                   placeholder="Precio del Producto"
                   name="precio"
+                  value={precio}
+                  onChange={onChangeFormulario}
                 />
 
                 <button

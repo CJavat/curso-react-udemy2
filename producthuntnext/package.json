@@ -1,0 +1,24 @@
+{
+  "name": "producthuntnext",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/babel-preset-css-prop": "^11.10.0",
+    "@emotion/core": "^11.0.0",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@next/font": "13.1.6",
+    "babel-plugin-emotion": "^11.0.0",
+    "eslint": "8.33.0",
+    "eslint-config-next": "13.1.6",
+    "next": "13.1.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}

@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   updateProfile,
+  signInWithEmailAndPassword,
+  signOut,
 } from "@firebase/auth";
 
 class Firebase {
@@ -20,11 +22,24 @@ class Firebase {
       password
     );
 
-    // return await nuevoUsuario.user.updateProfile.displayName({
-    //   displayName: nombre,
-    // });
-
     return await updateProfile(nuevoUsuario.user, { displayName: nombre });
+  }
+
+  // Iniciar sesión del usuario.
+  async login(email, password) {
+    const usuarioLogin = await signInWithEmailAndPassword(
+      this.auth,
+      email,
+      password
+    );
+    return await updateProfile(usuarioLogin.user, { displayName: email });
+  }
+
+  // Cerrar sesión del usuario.
+  async cerrarSesion() {
+    const auth = getAuth();
+    const sesionCerrada = await signOut(auth);
+    console.log(sesionCerrada);
   }
 }
 

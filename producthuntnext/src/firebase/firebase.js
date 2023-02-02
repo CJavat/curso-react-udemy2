@@ -8,7 +8,7 @@ import {
   signOut,
 } from "@firebase/auth";
 
-import { getFirestore } from "firebase/firestore";
+import "firebase/firestore";
 
 class Firebase {
   constructor() {
@@ -16,7 +16,7 @@ class Firebase {
 
     this.auth = getAuth(app);
 
-    this.db = getFirestore(app);
+    this.db = app.firestore;
   }
 
   // Registra un usuario.

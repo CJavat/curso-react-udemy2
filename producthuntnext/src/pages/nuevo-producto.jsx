@@ -10,6 +10,7 @@ import {
 } from "../components/ui/Formulario";
 
 import { FirebaseContext } from "../firebase/";
+import { collection, addDoc } from "firebase/firestore";
 
 // Validaciones
 import useValidacion from "../hooks/useValidacion";
@@ -56,7 +57,10 @@ export default function NuevoProducto() {
 
     // Insertarlo en la base de datos.
     // firebase.db.collection("productos").add(producto);
-    const respuesta = await firebase.db.collection("productos").doc("LA");
+    const respuesta = await addDoc(
+      collection(firebase.db, "productos"),
+      producto
+    );
 
     console.log("RESPUESTA: ", respuesta);
     console.log("FIREBASE DB: ", firebase.db);

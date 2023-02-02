@@ -6,7 +6,7 @@ const MyApp = (props) => {
   const usuario = useAutenticacion();
   // console.log(usuario);
   const { Component, pageProps } = props;
-  console.log("FIREBASEEEE -> ", firebase);
+  // console.log("FIREBASEEEE -> ", firebase);
   return (
     <FirebaseContext.Provider value={{ firebase, usuario }}>
       <Component {...pageProps} />

@@ -8,10 +8,15 @@ import {
   signOut,
 } from "@firebase/auth";
 
+import { getFirestore } from "firebase/firestore";
+
 class Firebase {
   constructor() {
     const app = initializeApp(firebaseConfig);
+
     this.auth = getAuth(app);
+
+    this.db = getFirestore(app);
   }
 
   // Registra un usuario.

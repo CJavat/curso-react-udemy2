@@ -2,9 +2,18 @@ import { useReducer } from "react";
 import authContext from "./authContext";
 import authReducer from "./authReducer";
 
-import { REGISTRO_EXITOSO, REGISTRO_ERROR, LIMPIAR_ALERTA } from "../../types";
+import {
+  REGISTRO_EXITOSO,
+  REGISTRO_ERROR,
+  LIMPIAR_ALERTA,
+  LOGIN_EXITOSO,
+  LOGIN_ERROR,
+  USUARIO_AUTENTICADO,
+  CERRAR_SESION,
+} from "../../types";
 
 import clienteAxios from "config/axios";
+import tokenAuth from "config/tokenAuth";
 
 const AuthState = ({ children }) => {
   // Definir un state inicial.
@@ -42,11 +51,55 @@ const AuthState = ({ children }) => {
     }, 3000);
   };
 
-  // Usuario autenticado.
-  const usuarioAutenticado = (nombre) => {
+  // Autenticar Usuarios.
+  const iniciarSesion = async (datos) => {
+    try {
+      const respuesta = await clienteAxios.post("/api/auth", datos);
+
+      dispatch({
+        type: LOGIN_EXITOSO,
+        payload: respuesta.data.token,
+      });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_ERROR,
+        payload: error.response.data.msg,
+      });
+    }
+
+    // Limpiar alerta.
+    setTimeout(() => {
+      dispatch({
+        type: LIMPIAR_ALERTA,
+      });
+    }, 3000);
+  };
+
+  // Retornar el usuario autenticado en base al JWT.
+  const usuarioAutenticado = async () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      tokenAuth(token);
+    }
+
+    try {
+      const respuesta = await clienteAxios.get("/api/auth");
+      dispatch({
+        type: USUARIO_AUTENTICADO,
+        payload: respuesta.data.usuario,
+      });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_ERROR,
+        payload: error.response.data.msg,
+      });
+    }
+  };
+
+  // Cerrar Sesion.
+  const cerrarSesion = () => {
     dispatch({
-      type: USUARIO_AUTENTICADO,
-      payload: nombre,
+      type: CERRAR_SESION,
     });
   };
 
@@ -59,6 +112,8 @@ const AuthState = ({ children }) => {
         mensaje: state.mensaje,
         usuarioAutenticado,
         registrarUsuario,
+        iniciarSesion,
+        cerrarSesion,
       }}
     >
       {children}

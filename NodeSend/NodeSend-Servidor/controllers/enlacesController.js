@@ -47,6 +47,16 @@ const nuevoEnlace = async (req, res, next) => {
   }
 };
 
+// Obtiene un listado de todos los enlaces.
+const todosEnlaces = async (req, res) => {
+  try {
+    const enlaces = await Enlaces.find({}).select("url -_id");
+    res.json({ enlaces });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Obtener el enlace.
 const obtenerEnlace = async (req, res, next) => {
   const { url } = req.params;
@@ -59,25 +69,10 @@ const obtenerEnlace = async (req, res, next) => {
     return next();
   }
 
-  // Si el enlace existe
+  // Si el enlace existe.
   res.status(200).json({ archivo: enlace.nombre });
 
-  // Si las descargas son iguales a 1 - Borrar la entrada y borrar el archivo.
-  const { descargas, nombre } = enlace;
-
-  if (descargas === 1) {
-    // Eliminar archivo.
-    req.archivo = nombre;
-
-    // Eliminar entrada de la DB.
-    await Enlaces.findOneAndRemove(req.params.url);
-
-    next();
-  } else {
-    // Si las entradas es mayor a 1 - Restar 1.
-    enlace.descargas--;
-    await enlace.save();
-  }
+  next();
 };
 
-module.exports = { nuevoEnlace, obtenerEnlace };
+module.exports = { nuevoEnlace, obtenerEnlace, todosEnlaces };

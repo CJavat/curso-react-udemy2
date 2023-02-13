@@ -6,8 +6,8 @@ const { check } = require("express-validator");
 const {
   nuevoEnlace,
   obtenerEnlace,
+  todosEnlaces,
 } = require("../controllers/enlacesController");
-const { eliminarArchivo } = require("../controllers/archivosController");
 
 router.post(
   "/",
@@ -19,6 +19,8 @@ router.post(
   nuevoEnlace
 );
 
-router.get("/:url", obtenerEnlace, eliminarArchivo);
+router.get("/", todosEnlaces);
+
+router.get("/:url", obtenerEnlace);
 
 module.exports = router;

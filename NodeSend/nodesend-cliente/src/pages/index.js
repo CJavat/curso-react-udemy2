@@ -37,7 +37,7 @@ function Index() {
               onClick={() =>
                 navigator.clipboard.writeText(
                   // FORMA PARA COPIAR EL ENLACE.
-                  `${process.env.frontendURL}/api/enlaces/${url}`
+                  `${process.env.frontendURL}/enlaces/${url}`
                 )
               }
             >

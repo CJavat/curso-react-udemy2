@@ -7,6 +7,8 @@ const {
   nuevoEnlace,
   obtenerEnlace,
   todosEnlaces,
+  tienePassword,
+  verificarPassword,
 } = require("../controllers/enlacesController");
 
 router.post(
@@ -21,6 +23,8 @@ router.post(
 
 router.get("/", todosEnlaces);
 
-router.get("/:url", obtenerEnlace);
+router.get("/:url", tienePassword, obtenerEnlace);
+
+router.post("/:url", verificarPassword, obtenerEnlace);
 
 module.exports = router;

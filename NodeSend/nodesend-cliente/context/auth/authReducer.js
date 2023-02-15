@@ -36,6 +36,7 @@ export default (state, action) => {
       return {
         ...state,
         usuario: action.payload,
+        autenticado: true,
       };
 
     case CERRAR_SESION:
